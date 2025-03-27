@@ -69,9 +69,7 @@ def before_request_func():
 
     query = IpView.query.filter_by(ip=client_ip, date_id=day_id)
     if query.count() == 0:  # check if it's the first time a viewer from this ip address is viewing the website
-        ip_view = IpView(idb.session.add(day4)
-db.session.add(day5)
-db.session.add(day6)p=client_ip, date_id=day_id)
+        ip_view = IpView(ip=client_ip, date_id=day_id)
         db.session.add(ip_view)  # insert into the ip_view table
 
     db.session.commit()  # commit all the changes to the database
