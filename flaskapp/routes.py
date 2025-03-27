@@ -37,22 +37,24 @@ def new_post():
         return redirect(url_for('home'))
     return render_template('create_post.html', title='New Post', form=form)
 
-
 # Route to the dashboard page
 @app.route('/dashboard')
 def dashboard():
-    days = Day.query.all()
-    df = pd.DataFrame([{'Date': day.id, 'Page views': day.views} for day in days])
-
-    fig = px.bar(df, x='Date', y='Page views')
-
+    df = pd.DataFrame({
+        'Fruit': ['Apples', 'Oranges', 'Bananas', 'Apples', 'Oranges',
+                'Bananas'],
+        'Amount': [4, 1, 2, 2, 4, 5],
+        'City': ['Berlin', 'Berlin', 'Berlin', 'Munich', 'Munich', 'Munich']
+    })
+    fig = px.bar(df, x='Fruit', y='Amount', color='City',
+                barmode='group')
     graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
-    return render_template('dashboard.html', title='Page views per day', graphJSON=graphJSON)
-
+    
+    return render_template('dashboard.html', title='My plot', graphJSON=graphJSON)
 
 @app.before_request
 def before_request_func():
-    day_id = datetime.date.today()  # get our day_id
+    day_id = datetime.date.today()   # get our day_id, which is the date string in the format "yyyy-mm-dd"
     client_ip = request.remote_addr  # get the ip address of where the client request came from
 
     query = Day.query.filter_by(id=day_id)  # try to get the row associated to the current day
@@ -67,7 +69,20 @@ def before_request_func():
 
     query = IpView.query.filter_by(ip=client_ip, date_id=day_id)
     if query.count() == 0:  # check if it's the first time a viewer from this ip address is viewing the website
-        ip_view = IpView(ip=client_ip, date_id=day_id)
+        ip_view = IpView(idb.session.add(day4)
+db.session.add(day5)
+db.session.add(day6)p=client_ip, date_id=day_id)
         db.session.add(ip_view)  # insert into the ip_view table
 
     db.session.commit()  # commit all the changes to the database
+    
+# Route to the dashboard page
+@app.route('/dashboard_2')
+def dashboard_2():
+    days = Day.query.all()
+    df = pd.DataFrame([{'Date': day.id, 'Page views': day.views} for day in days])
+
+    fig = px.bar(df, x='Date', y='Page views')
+
+    graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+    return render_template('dashboard.html', title='Page views per day', graphJSON=graphJSON)
